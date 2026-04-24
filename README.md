@@ -1,23 +1,19 @@
 # Smart Greenhouse IoT - E.A.E.
 
-Backend em Node.js com Express e SQL Server para suporte a um sistema de estufa automatizada. O projeto expõe uma API REST com autenticação via JWT, registro e consulta de dados de sensores, além de um módulo de comentários com controle de autenticação e autorização por usuário.
+Backend em Node.js com Express e SQL Server para o sistema Smart Greenhouse IoT - E.A.E. A API foi organizada em camadas para manter o projeto simples de evoluir localmente, com separacao entre rotas, controllers, services e repositories.
 
-## Descrição
+## Descricao
 
-Este backend foi estruturado em camadas para facilitar manutenção e evolução:
+O projeto atende o backend de uma estufa automatizada, com autenticacao de usuarios, registro de dados de sensores e gerenciamento de comentarios. O foco atual e uso local/offline, sem preparacao de deploy em ambiente online.
 
-- `routes`: definição dos endpoints
-- `controllers`: tratamento de requisição e resposta
-- `services`: regras de negócio e validações
-- `repositories`: acesso ao banco de dados
+Arquitetura utilizada:
 
-Atualmente, o sistema possui três módulos principais:
+- `routes`
+- `controllers`
+- `services`
+- `repositories`
 
-- `auth`: cadastro e login de usuários
-- `sensor`: cadastro e consulta de leituras de sensores
-- `comentarios`: criação, listagem, edição e remoção de comentários
-
-## Tecnologias Utilizadas
+## Tecnologias Usadas
 
 - Node.js
 - Express
@@ -28,16 +24,14 @@ Atualmente, o sistema possui três módulos principais:
 
 ## Funcionalidades
 
-- Cadastro de usuário com senha criptografada
-- Login com geração de token JWT
-- Rotas protegidas por autenticação
-- Cadastro de dados de sensores vinculados ao usuário autenticado
-- Listagem de sensores e consulta do último registro
-- CRUD de comentários
-- Edição e exclusão de comentários apenas pelo usuário dono
-- Paginação de comentários
-- Busca textual em comentários
-- Filtro de comentários por usuário
+- Cadastro de usuarios
+- Login com token JWT
+- Rotas autenticadas
+- Cadastro de leituras de sensores
+- Listagem de sensores e consulta do ultimo registro
+- CRUD de comentarios
+- Edicao e exclusao de comentarios apenas pelo dono
+- Paginacao e filtros em comentarios
 
 ## Estrutura de Pastas
 
@@ -67,45 +61,61 @@ src/
     sensor.service.js
 ```
 
-## Instalação
+## Instalacao
 
-1. Clone o repositório.
-2. Acesse a pasta do projeto.
-3. Instale as dependências:
+1. Clone o repositorio.
+2. Entre na pasta do projeto.
+3. Instale as dependencias:
 
 ```bash
 npm install
 ```
 
-## Configuração do `.env`
+## Configuracao Local
 
-O projeto ainda não está lendo variáveis de ambiente automaticamente no código atual. Neste momento, as configurações de banco e a chave JWT estão definidas diretamente nos arquivos fonte.
+Crie um arquivo `.env` na raiz do projeto com base no arquivo `.env.example`.
 
-Mesmo assim, recomenda-se preparar um arquivo `.env` para a próxima etapa de evolução do projeto, com variáveis como:
+Exemplo:
 
 ```env
 PORT=3000
 DB_USER=sa
 DB_PASSWORD=1234567890
 DB_SERVER=localhost
-DB_PORT=1433
-DB_NAME=eae
+DB_DATABASE=eae
 JWT_SECRET=segredo_super_forte
 ```
 
-Observação:
+## Variaveis de Ambiente
 
-- hoje, esses valores ainda precisam estar alinhados manualmente com os arquivos `src/config/db.js`, `src/services/auth.service.js` e `src/middlewares/auth.middleware.js`
+- `PORT`: porta local da API
+- `DB_USER`: usuario do SQL Server
+- `DB_PASSWORD`: senha do SQL Server
+- `DB_SERVER`: host do banco
+- `DB_DATABASE`: nome do banco
+- `JWT_SECRET`: chave usada na autenticacao JWT
 
-## Como Rodar o Projeto
+Observacao importante:
 
-Com as dependências instaladas e o SQL Server configurado, inicie a aplicação com:
+- o projeto agora possui `.env.example` para padronizar a configuracao local
+- o arquivo `.env` esta ignorado no Git
+- o codigo atual ainda usa configuracoes fixas em alguns arquivos, entao o `.env` serve como referencia local de configuracao e organizacao
+
+## Como Rodar Offline
+
+Depois de instalar as dependencias e configurar o SQL Server local:
 
 ```bash
-node src/server.js
+npm run dev
 ```
 
-A API ficará disponível em:
+Ou, se preferir iniciar sem `nodemon`:
+
+```bash
+npm start
+```
+
+API local:
 
 ```text
 http://localhost:3000
@@ -113,7 +123,7 @@ http://localhost:3000
 
 ## Rotas Principais
 
-### Autenticação
+### Autenticacao
 
 - `POST /api/auth/cadastrar`
 - `POST /api/auth/login`
@@ -124,7 +134,7 @@ http://localhost:3000
 - `GET /api/sensor`
 - `GET /api/sensor/ultimo`
 
-### Comentários
+### Comentarios
 
 - `POST /api/comentarios`
 - `GET /api/comentarios`
@@ -132,42 +142,9 @@ http://localhost:3000
 - `PUT /api/comentarios/:id`
 - `DELETE /api/comentarios/:id`
 
-## Exemplos de Uso
-
-### Login
-
-```http
-POST /api/auth/login
-Content-Type: application/json
-
-{
-  "login": "usuario@example.com",
-  "senha": "123456"
-}
-```
-
-### Criar comentário
-
-```http
-POST /api/comentarios
-Authorization: Bearer SEU_TOKEN
-Content-Type: application/json
-
-{
-  "texto": "Comentário de exemplo"
-}
-```
-
-### Listar comentários com paginação e busca
-
-```http
-GET /api/comentarios?page=1&limit=10&search=temperatura
-Authorization: Bearer SEU_TOKEN
-```
-
 ## Status do Projeto
 
-Projeto em desenvolvimento acadêmico, com estrutura organizada e funcionalidades principais do backend já implementadas.
+Projeto em desenvolvimento academico, funcional para uso local e com estrutura organizada para evolucao incremental.
 
 ## Autor
 
